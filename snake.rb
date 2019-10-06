@@ -3,6 +3,7 @@
 require 'ruby2d'
 
 set background: 'navy'
+set fps_cap: 1
 
 # width = 640 / 20 = 32
 # height = 480 / 20 = 24
@@ -26,10 +27,17 @@ class Snake
   end
 
   def move
+    @positions.shift
     case @direction
     when 'down'
-      @positions.shift
+      @positions.push([head[0], head[1] + 1])
     end
+  end
+
+  private
+
+  def head
+    @positions.last
   end
 end
 snake = Snake.new
