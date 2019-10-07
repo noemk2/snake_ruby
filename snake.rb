@@ -88,10 +88,12 @@ class Game
   end
 
   def draw
-    Square.new(
-      x: @ball_x * GRID_SIZE,
-      y: @ball_y * GRID_SIZE, size: GRID_SIZE, color: 'yellow'
-    )
+    unless finished?
+      Square.new(
+        x: @ball_x * GRID_SIZE,
+        y: @ball_y * GRID_SIZE, size: GRID_SIZE, color: 'yellow'
+      )
+    end
     Text.new("Score : #{@score}", color: 'green', x: 10, y: 10, size: 25)
   end
 
@@ -106,8 +108,11 @@ class Game
   end
 
   def finish
-    puts 'Finishing Game'
     @finished = true
+  end
+
+  def finished?
+    @finished
   end
 end
 
@@ -116,7 +121,7 @@ game = Game.new
 
 update do
   clear
-  snake.move
+  snake.move unless game.finished?
   snake.draw
   game.draw
 
