@@ -145,6 +145,9 @@ end
 on :key_down do |event|
   if %w[up down left right].include?(event.key)
     snake.direction = event.key if snake.can_change_direction_to?(event.key)
+  elsif event.key == 'r'
+    snake = Snake.new
+    game = Game.new
   end
 end
 show
