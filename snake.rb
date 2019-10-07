@@ -63,6 +63,10 @@ class Snake
     @growing = true
   end
 
+  def hit_itself?
+    @positions.uniq.length != @positions.length
+  end
+
   private
 
   def new_coords(x, y)
@@ -80,6 +84,7 @@ class Game
     @score = 0
     @ball_x = rand(GRID_WIDTH)
     @ball_y = rand(GRID_HEIGHT)
+    @finished = false
   end
 
   def draw
@@ -99,6 +104,11 @@ class Game
     @ball_x = rand(GRID_WIDTH)
     @ball_y = rand(GRID_HEIGHT)
   end
+
+  def finish
+    puts 'Finishing Game'
+    @finished = true
+  end
 end
 
 snake = Snake.new
@@ -114,6 +124,7 @@ update do
     game.record_hit
     snake.grow
   end
+  game.finish if snake.hit_itself?
 end
 
 on :key_down do |event|
