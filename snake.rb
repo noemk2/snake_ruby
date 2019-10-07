@@ -62,12 +62,31 @@ class Snake
     @positions.last
   end
 end
-snake = Snake.new
 
+# class
+class Game
+  def initialize
+    @score = 0
+    @ball_x = rand(GRID_WIDTH)
+    @ball_y = rand(GRID_HEIGHT)
+  end
+
+  def draw
+    Square.new(
+      x: @ball_x * GRID_SIZE,
+      y: @ball_y * GRID_SIZE, size: GRID_SIZE, color: 'yellow'
+    )
+    Text.new("Score : #{@score}", color: 'green', x: 10, y: 10, size: 25)
+  end
+end
+
+snake = Snake.new
+game = Game.new
 update do
   clear
   snake.move
   snake.draw
+  game.draw
 end
 on :key_down do |event|
   if %w[up down left right]
