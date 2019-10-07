@@ -3,7 +3,7 @@
 require 'ruby2d'
 
 set background: 'navy'
-set fps_cap: 20
+set fps_cap: 10
 
 GRID_SIZE = 20
 GRID_WIDTH = Window.width / GRID_SIZE
@@ -15,6 +15,7 @@ class Snake
   def initialize
     @positions = [[2, 0], [2, 1], [2, 2], [2, 3]]
     @direction = 'down'
+    @growing = false
   end
 
   def draw
@@ -27,7 +28,7 @@ class Snake
   end
 
   def move
-    @positions.shift
+    @positions.shift unless @growing
     case @direction
     when 'down'
       @positions.push(new_coords(head[0], head[1] + 1))
@@ -38,6 +39,7 @@ class Snake
     when 'right'
       @positions.push(new_coords(head[0] + 1, head[1]))
     end
+    @growing = false
   end
 
   def can_change_direction_to?(new_direction)
@@ -55,6 +57,10 @@ class Snake
 
   def y
     head[1]
+  end
+
+  def grow
+    @growing = true
   end
 
   private
@@ -97,14 +103,19 @@ end
 
 snake = Snake.new
 game = Game.new
+
 update do
   clear
   snake.move
   snake.draw
   game.draw
 
-  game.record_hit if game.snake_hit_ball?(snake.x, snake.y)
+  if game.snake_hit_ball?(snake.x, snake.y)
+    game.record_hit
+    snake.grow
+  end
 end
+
 on :key_down do |event|
   if %w[up down left right].include?(event.key)
     snake.direction = event.key if snake.can_change_direction_to?(event.key)
